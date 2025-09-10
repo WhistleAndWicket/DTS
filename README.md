@@ -20,13 +20,11 @@ The project uses LocalDB for local development. By default, you can use the stan
 
 ### Steps:
 - Ensure LocalDB is installed. Visual Studio 2022 typically installs it automatically `(localdb)\MSSQLLocalDB`
-- Get the connection string using one of the options below.
-  - Click View --> SQL Server Object Explorer --> Expand SQL Server --> Right click `(localdb)\MSSQLLocalDB` and check _Properties_. Copy the connection string from _Properties_ section.
-  - Copy the connection string below
-  ```
-  Server=(localdb)\\MSSQLLocalDB;Database=DtsDb;Trusted_Connection=True;
-  ```
+- To get the connection string,
+  - In Visual Studio: Click **View** → **SQL Server Object Explorer** → Expand **SQL Server** → Right click `(localdb)\MSSQLLocalDB` and check **Properties**. Copy the connection string from the **Properties** section.
+  - Make sure to set the `Initial Catalog` (database name) in the connection string to something meaningful for your environment.
 - Add the copied connection string in the _**appsettings.Development.json**_ file under API project.
+- Example
 ```
 {
   "DatabaseSettings": {
@@ -77,7 +75,8 @@ The project uses LocalDB for local development. By default, you can use the stan
 - To run tests, click Test --> Test Explorer --> Right click `Tests.Unit` and select "**Run**"
 
 ## Running the solution
-- The API project is setup as **Startup** project.
+- Set the Api project as **Startup** project. To do this,
+  - Right click **Api** project --> Select "_Set as Startup Project_" option.
 - Click the "**https**" option on the tool bar.
 - The web page `https://localhost:<PORT>/swagger/index.html` will be opened documenting all the APIs used.
 - The API testing can be done from this page.
