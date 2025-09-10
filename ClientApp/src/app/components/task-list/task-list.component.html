@@ -5,7 +5,7 @@
 
 <div class="mat-elevation-z8">
     <ng-template #content>
-        <mat-table [dataSource]="dataSource" class="full-width-table">
+        <mat-table *ngIf="!(isLoading$ | async);" [dataSource]="dataSource" class="full-width-table">
 
             <!-- ID Column -->
             <ng-container matColumnDef="id">
