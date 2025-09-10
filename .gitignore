@@ -1,0 +1,81 @@
+##############################
+# .NET / Visual Studio ignores
+##############################
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio cache
+.vs/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Database / local files
+*.mdf
+*.ldf
+*.dbmdl
+
+# Others
+*.pidb
+*.svclog
+*.jfm
+*.log
+*.sql
+*.sqlproj.user
+*.pfx
+
+
+##############################
+# Angular / Node ignores
+##############################
+
+# Dependencies
+ClientApp/node_modules/
+
+# Build outputs
+ClientApp/dist/
+ClientApp/out-tsc/
+
+# Logs
+ClientApp/*.log
+ClientApp/src/**/*.log
+
+# IDE / Editor files
+ClientApp/.idea/
+ClientApp/.vscode/
+
+# Angular cache
+ClientApp/.angular/cache/
+ClientApp/.angular/
+
+# Misc
+ClientApp/package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+##############################
+# General
+##############################
+
+# OS generated files
+.DS_Store
+Thumbs.db
