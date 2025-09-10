@@ -1,0 +1,17 @@
+.task-item-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+
+    .task-item-card {
+        gap: 1rem;
+    }
+
+    .task-title {
+        margin-bottom: 0.5rem;
+    }
+
+    .task-card-actions {
+        gap: 1rem;
+    }
+}

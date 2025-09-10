@@ -1,0 +1,45 @@
+<!-- create-task.component.html -->
+<h2 mat-dialog-title class="text-centered" i18n>Create Task</h2>
+
+<mat-dialog-content [formGroup]="taskForm" class="dialog-content">
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label i18n>Title</mat-label>
+        <input matInput formControlName="title" />
+        <mat-error *ngIf="taskForm.get('title')?.hasError('required')" i18n>
+            Title is required
+        </mat-error>
+        <mat-error *ngIf="taskForm.controls['title'].hasError('titleExists')" i18n>
+            This title already exists.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label i18n>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label i18n>Due Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dueDate">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+
+        <mat-error *ngIf="taskForm.get('dueDate')?.hasError('required')" i18n>
+            Due Date is required
+        </mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label i18n>Status</mat-label>
+        <mat-select formControlName="status">
+            <mat-option *ngFor="let status of statuses" [value]="status">{{ status }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-flat-button class color="warn" (click)="cancel()" i18n>Cancel</button>
+    <button mat-flat-button color="primary" (click)="save()" [disabled]="taskForm.invalid" i18n>Save</button>
+</mat-dialog-actions>

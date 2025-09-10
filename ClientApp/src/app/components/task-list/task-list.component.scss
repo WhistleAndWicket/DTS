@@ -1,0 +1,17 @@
+.task-row {
+    cursor: pointer;
+}
+
+.no-data {
+    justify-content: center;
+    padding: 16px;
+    font-weight: bold;
+
+    @media screen and (max-width: 1024px) {
+        font-size: clamp(12px, 4vw, 16px);
+    }
+
+    @media screen and (max-width: 480px) {
+        font-size: clamp(8px, 4vw, 12px);
+    }
+}

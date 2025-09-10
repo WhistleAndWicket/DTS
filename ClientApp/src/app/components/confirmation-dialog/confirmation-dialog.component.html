@@ -1,0 +1,8 @@
+<h2 mat-dialog-title class="text-centered">{{data.title}}</h2>
+<mat-dialog-content>
+    <p>{{ data.message }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-raised-button (click)="onButtonAction(false)">Close</button>
+    <button mat-raised-button color="warn" (click)="onButtonAction(true)">{{data.confirmationButtonText}}</button>
+</mat-dialog-actions>

@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.center-spinner {
+    align-items: center; // Center vertically.
+    display: flex;
+    height: 50vh; // Ensure the container takes the full viewport height.
+    justify-content: center; // Center horizontally.
+}
+
+.dialog-backdrop {
+    backdrop-filter: blur(8px);
+    background-color: rgba(0, 0, 0, 0.6); // subtle dark overlay
+}
+
+.text-centered {
+    text-align: center;
+}

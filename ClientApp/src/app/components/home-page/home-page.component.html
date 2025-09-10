@@ -1,0 +1,10 @@
+<div class="home-page">
+    <div class="header">
+        <h1 class="title" i18n>Task Items</h1>
+        <button mat-flat-button color="primary" (click)="onCreateTask()" [disabled]="isLoading$ | async" i18n>
+            Create Task
+        </button>
+    </div>
+
+    <app-task-list [taskItems$]="taskItems$"></app-task-list>
+</div>
