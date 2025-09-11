@@ -28,9 +28,9 @@ export class HomePageComponent implements OnInit {
   taskItems$!: Observable<TaskItemResponseDto[]>;
 
   constructor(
-    private taskItemStateService: TaskItemStateService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private taskItemStateService: TaskItemStateService
   ) {}
 
   ngOnInit(): void {
@@ -66,7 +66,6 @@ export class HomePageComponent implements OnInit {
         // Call the service to create the task.
         this.taskItemStateService.createTask(createCommand).subscribe({
           next: (created) => {
-            console.log('Created task:', created);
             if (created?.id) {
               // Navigate to the newly created task's detail page.
               this.router.navigate(['/task-item', created.id]);
@@ -75,7 +74,7 @@ export class HomePageComponent implements OnInit {
               this.taskItemStateService.selectTaskById(created.id);
             }
           },
-          error: (err) => console.error('Failed to create task', err),
+          error: () => console.error($localize`Failed to create task`),
         });
       }
     });

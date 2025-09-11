@@ -46,10 +46,10 @@ export class TaskItemComponent implements OnInit, OnDestroy {
   taskNotFound: boolean = false;
 
   constructor(
+    private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
-    private taskItemStateService: TaskItemStateService,
-    private dialog: MatDialog
+    private taskItemStateService: TaskItemStateService
   ) {
     this.task$ = this.taskItemStateService.selectedTaskItem$;
     this.isUpdatingStatus$ = this.taskItemStateService.isUpdatingStatus$;
@@ -77,6 +77,11 @@ export class TaskItemComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Navigates back to the home page. */
+  onBack() {
+    this.router.navigate(['/']);
+  }
+
   /**
    * Handles the deletion of a task item after user confirmation.
    * @param taskItem The task item to be deleted.
@@ -101,16 +106,8 @@ export class TaskItemComponent implements OnInit, OnDestroy {
       if (confirmed) {
         // User confirmed deletion, proceed to delete the task.
         this.taskItemStateService.deleteTask(taskItem.id ?? 0);
-
-        // Navigate back to the home page after deletion.
-        this.router.navigate(['/']);
       }
     });
-  }
-
-  /** Navigates back to the home page. */
-  onBack() {
-    this.router.navigate(['/']);
   }
 
   /**

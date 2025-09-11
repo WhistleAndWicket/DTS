@@ -1,12 +1,23 @@
 import { Injectable } from '@angular/core';
 import {
+  ApiException,
   CreateTaskItemCommandDto,
   TaskItemResponseDto,
   TaskItemService,
   TaskItemStatus,
   UpdateTaskItemStatusCommandDto,
 } from './dts-api';
-import { BehaviorSubject, finalize, Observable, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  finalize,
+  Observable,
+  of,
+  tap,
+} from 'rxjs';
+
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +38,11 @@ export class TaskItemStateService {
 
   //#endregion Private state management subjects.
 
-  constructor(private taskItemService: TaskItemService) {}
+  constructor(
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private taskItemService: TaskItemService
+  ) {}
 
   /** Observable indicating if data is being loaded. */
   get isLoading$(): Observable<boolean> {
@@ -63,20 +78,43 @@ export class TaskItemStateService {
 
   /**
    * Create a new task item.
+   * On error, shows a snackbar message.
    * @param task The task item data to create.
    * @returns An observable of the created TaskItemResponseDto.
    */
-  createTask(task: CreateTaskItemCommandDto): Observable<TaskItemResponseDto> {
+  createTask(
+    task: CreateTaskItemCommandDto
+  ): Observable<TaskItemResponseDto | null> {
     return this.taskItemService.create(task).pipe(
       tap((created) => {
         const current = this._taskItems$.value;
         this._taskItems$.next([...current, created]);
+      }),
+      catchError((err) => {
+        let message = $localize`An unexpected error occurred`;
+        if (err instanceof ApiException) {
+          // ApiException has properties like statusCode, response, message
+          message = err.message ?? message;
+          if (err.response) {
+            try {
+              const resp = JSON.parse(err.response);
+              message = resp.message ?? resp.title ?? message;
+            } catch {
+              // ignore JSON parse errors
+            }
+          }
+        }
+        this.snackBar.open(message, 'Close', {
+          duration: 5000,
+        });
+        return of(null);
       })
     );
   }
 
   /**
-   * Delete a task item.
+   * Delete a task item
+   * and navigate to home on success.
    * @param id The ID of the task to delete.
    */
   deleteTask(id: number): void {
@@ -92,8 +130,11 @@ export class TaskItemStateService {
           if (selected && selected.id === id) {
             this._selectedTaskItem$.next(null);
           }
+
+          // Navigate after deletion
+          this.router.navigate(['/']);
         },
-        error: (err) => console.error('Failed to delete task', err),
+        error: () => this._selectedTaskItem$.next(null),
       });
   }
 
@@ -105,8 +146,8 @@ export class TaskItemStateService {
         this._taskItems$.next(items);
         this._isLoading$.next(false);
       },
-      error: (err) => {
-        console.error('Failed to load tasks', err);
+      error: () => {
+        console.error($localize`Failed to load tasks`);
         this._isLoading$.next(false);
       },
     });
@@ -118,23 +159,17 @@ export class TaskItemStateService {
    */
   selectTaskById(id: number): void {
     this._isLoading$.next(true);
-    const existing = this._taskItems$.value.find((t) => t.id === id);
-    if (existing) {
-      this._selectedTaskItem$.next(existing);
-      this._isLoading$.next(false);
-    } else {
-      this.taskItemService.get(id).subscribe({
-        next: (task) => {
-          this._selectedTaskItem$.next(task);
-          this._isLoading$.next(false);
-        },
-        error: (err) => {
-          console.error('Failed to fetch task by id', err);
-          this._selectedTaskItem$.next(null);
-          this._isLoading$.next(false);
-        },
-      });
-    }
+    this.taskItemService.get(id).subscribe({
+      next: (task) => {
+        this._selectedTaskItem$.next(task);
+        this._isLoading$.next(false);
+      },
+      error: () => {
+        console.error($localize`Failed to fetch task by id`);
+        this._selectedTaskItem$.next(null);
+        this._isLoading$.next(false);
+      },
+    });
   }
 
   /**
@@ -158,7 +193,9 @@ export class TaskItemStateService {
           );
           this._taskItems$.next(current);
         },
-        error: (err) => console.error('Failed to update task', err),
+        error: () => {
+          this._selectedTaskItem$.next(null);
+        },
       });
   }
 }
